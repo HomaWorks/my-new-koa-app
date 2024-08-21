@@ -1,0 +1,18 @@
+    body {
+      padding: 50px;
+      text-align: center;
+      font-family: Arial, sans-serif;
+    }
+    .btn {
+      display: inline-block;
+      padding: 10px 20px;
+      margin-top: 20px;
+      border-radius: 5px;
+      color: #fff;
+      background-color: #0070f3;
+      font-weight: bold;
+      text-decoration: none;
+    }
+    .btn:hover {
+      background-color: #005bb5;
+    }
