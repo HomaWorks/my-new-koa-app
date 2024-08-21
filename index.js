@@ -1,23 +1,16 @@
-// Import createApp and generateStaticPages (if you're using SSG)
 const { createApp, generateStaticPages } = require('@destools/fest.js');
-
 const path = require('path');
 const fs = require('fs');
-
-const isDevelopment = process.env.NODE_ENV === 'development';
 
 // Load configuration
 const configPath = path.resolve(process.cwd(), 'fest.config.js');
 const config = fs.existsSync(configPath) ? require(configPath) : {};
 
 // Initialize the app and server
-const { app, server } = createApp(config);
+const { app } = createApp(config);
 
-const PORT = process.env.PORT || 3000;
-
-async function startServer() {
-  if (!isDevelopment && typeof generateStaticPages === 'function') {
-    // Run SSG process in production mode
+async function generateStatic() {
+  if (typeof generateStaticPages === 'function') {
     try {
       await generateStaticPages(config);
       console.log('Static site generation completed');
@@ -25,10 +18,10 @@ async function startServer() {
       console.error('Error during static site generation:', error);
     }
   }
-
-  server.listen(PORT, () => {
-    console.log(`Server running at http://localhost:${PORT}`);
-  });
 }
 
-startServer();
+// Export a function to handle HTTP requests
+module.exports = async (req, res) => {
+  await generateStatic(); // Ensure static pages are generated
+  await app(req, res);   // Handle the request with the app
+};
